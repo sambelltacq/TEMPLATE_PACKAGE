@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#This script is where the compile cmds should be
+
+ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+for file in "${ROOTDIR}/root/usr/local/bin/"*.c; do
+    [ -e "$file" ] || { echo "No files found"; break; }
+    filename=$(basename "$file" .c)
+    echo "${file} -> ${filename}"
+    gcc "$file" -o "${ROOTDIR}/root/usr/local/bin/$filename"
+done

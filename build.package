@@ -1,0 +1,30 @@
+#!/bin/bash
+
+#This script is run by Github actions to create a package and the add it to a new release.
+
+#Package name
+PKG="TEMPLATE_PACKAGE"
+#Load sequence
+SEQ=35
+#Last commit timestamp
+TIMESTAMP=$(git log -1 --date=format:'%y%m%d%H%M' --format=%cd)
+
+ROOTDIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+#Tar filesyststem
+EXCLUDED_FILTYPES=(c o)
+EXCLUDES=()
+for ext in "${EXCLUDED_FILTYPES[@]}"; do
+  EXCLUDES+=(--exclude="*.$ext")
+done
+
+
+
+rm -rf "${ROOTDIR}/release" && mkdir -p "${ROOTDIR}/release"
+RELEASE="release/${SEQ}-${PKG}-${TIMESTAMP}.tgz"
+
+CMD="tar cvzf ${RELEASE} "${EXCLUDES[@]}" -C root ."
+echo "Running ${CMD}"
+$CMD
+
+
